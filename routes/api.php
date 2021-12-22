@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\ProjectionController;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +18,20 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/login', function (Request $request) {
+    $user = User::where('email', $request->email)->first();
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
+        ]);
+    }
+
+    return $user->createToken($request->email)->plainTextToken;
+});
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::apiResources([
+        '/movies'=>MovieController::class,
+        '/projections'=>ProjectionController::class,
+    ]);
 });
