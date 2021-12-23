@@ -27,7 +27,7 @@ class ProjectionController extends Controller
     public function store(Request $request)
     {
         try {
-            return response()->json(Projection::create($request->all));
+            return response()->json(Projection::create($request->all()));
         } catch (\Throwable $th) {
            return \response()->json($th->getMessage(),500);
         }
@@ -54,7 +54,7 @@ class ProjectionController extends Controller
     public function update(Request $request, Projection $projection)
     {
         try {
-            $projection->update($request->all);
+            $projection->update($request->all());
             return response()->json($projection);
         } catch (\Throwable $th) {
            return \response()->json($th->getMessage(),500);

@@ -27,7 +27,7 @@ class MovieController extends Controller
     public function store(Request $request)
     {
         try {
-            return response()->json(Movie::create($request->all));
+            return response()->json(Movie::create($request->all()));
         } catch (\Throwable $th) {
            return \response()->json($th->getMessage(),500);
         }
@@ -54,7 +54,7 @@ class MovieController extends Controller
     public function update(Request $request, Movie $movie)
     {
         try {
-            $movie->update($request->all);
+            $movie->update($request->all());
             return response()->json($movie);
         } catch (\Throwable $th) {
            return \response()->json($th->getMessage(),500);
